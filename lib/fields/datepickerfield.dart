@@ -19,6 +19,24 @@ class _DatePickerFieldState extends State<DatePickerField> {
       initialDate: DateTime.now(),
       firstDate: DateTime(2000),
       lastDate: DateTime(2101),
+      builder: (context, child) {
+        return Theme(
+          data: ThemeData.light().copyWith(
+            primaryColor: const Color(0xFF00754B), // AppBar & highlight color
+            colorScheme: const ColorScheme.light(
+              primary: Color(0xFF00754B), // Selected date background
+              onPrimary: Colors.white, // Selected date text color
+              onSurface: Colors.black54, // Other text color
+            ),
+            textButtonTheme: TextButtonThemeData(
+              style: TextButton.styleFrom(
+                foregroundColor: const Color(0xFF00754B), // Button color
+              ),
+            ),
+          ),
+          child: child!,
+        );
+      },
     );
     if (picked != null && picked != selectedDate) {
       setState(() {
@@ -40,19 +58,24 @@ class _DatePickerFieldState extends State<DatePickerField> {
         GestureDetector(
           onTap: () => _selectDate(context),
           child: Container(
-            width: double.infinity, // Matches TextField width
+            width: double.infinity,
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
             decoration: BoxDecoration(
-              // Fills background like TextField
+              color: Colors.white, // Background color set to white
               borderRadius: BorderRadius.circular(10),
-              border: Border.all(
-                  color: Colors.grey.shade400), // Matches TextField border
+              border: Border.all(color: Colors.grey.shade400),
             ),
             child: Text(
               selectedDate == null
                   ? "Select Date"
                   : "${selectedDate!.day}/${selectedDate!.month}/${selectedDate!.year}",
-              style: GoogleFonts.poppins(fontSize: 14, color: Colors.black54),
+              style: GoogleFonts.poppins(
+                fontSize: 14,
+                color: selectedDate == null
+                    ? const Color(0xFF00754B)
+                    : Colors.black54,
+                fontWeight: FontWeight.w500,
+              ),
             ),
           ),
         ),

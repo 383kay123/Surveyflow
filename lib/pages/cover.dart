@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:surveyflow/Consent.dart';
+import 'package:surveyflow/pages/Consent.dart';
+import 'package:surveyflow/pages/endcollection.dart';
+import 'package:surveyflow/pages/farmerident.dart';
+import 'package:surveyflow/pages/remediation.dart';
+import 'package:surveyflow/pages/sensitization.dart';
 
 class Questionnaire extends StatelessWidget {
   const Questionnaire({super.key});
@@ -10,9 +14,11 @@ class Questionnaire extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Questionnaire',
+          'Cover',
           style: GoogleFonts.poppins(
-              fontWeight: FontWeight.w700, color: Colors.white),
+            fontWeight: FontWeight.w700,
+            color: Colors.white,
+          ),
         ),
         centerTitle: true,
         backgroundColor: const Color(0xFF006A4E),
@@ -24,6 +30,15 @@ class Questionnaire extends StatelessWidget {
             },
           ),
         ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.sync,
+                color: Colors.white), // Change the icon here
+            onPressed: () {
+              // Add functionality here
+            },
+          ),
+        ],
       ),
       backgroundColor: Colors.grey[100],
       drawer: Drawer(
@@ -77,7 +92,48 @@ class Questionnaire extends StatelessWidget {
                 'FARMER IDENTIFICATION',
                 style: GoogleFonts.poppins(fontWeight: FontWeight.w500),
               ),
-              onTap: () => Navigator.pop(context),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Farmerident()),
+                );
+              },
+            ),
+            ListTile(
+              title: Text(
+                'REMEDIATION',
+                style: GoogleFonts.poppins(fontWeight: FontWeight.w500),
+              ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Remediation()),
+                );
+              },
+            ),
+            ListTile(
+              title: Text(
+                'SENSITIZATION',
+                style: GoogleFonts.poppins(fontWeight: FontWeight.w500),
+              ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Sensitization()),
+                );
+              },
+            ),
+            ListTile(
+              title: Text(
+                'END OF COLLECTION',
+                style: GoogleFonts.poppins(fontWeight: FontWeight.w500),
+              ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Endcollection()),
+                );
+              },
             ),
           ],
         ),
@@ -112,23 +168,58 @@ class Questionnaire extends StatelessWidget {
                 'Number of farmer children aged 5-17 captured',
                 'List of children aged 5 to 17 captured in House',
               ]),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => const Consent()));
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF00754B),
-                  foregroundColor: Colors.white,
-                  padding: EdgeInsets.symmetric(horizontal: 70, vertical: 12),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // Add this
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const Consent()),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF00754B),
+                      foregroundColor: Colors.white,
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 10, vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                    ),
+                    child: Text(
+                      'PREV ',
+                      style: GoogleFonts.inter(fontWeight: FontWeight.w400),
+                    ),
                   ),
-                ),
-                child: Text(
-                  'TO CONTINUE ',
-                  style: GoogleFonts.inter(fontWeight: FontWeight.w400),
-                ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const Consent()),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF00754B),
+                      foregroundColor: Colors.white,
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 10, vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                    ),
+                    child: Text(
+                      'NEXT ',
+                      style: GoogleFonts.inter(fontWeight: FontWeight.w400),
+                    ),
+                  ),
+                ], // Close children list
               ),
               const SizedBox(height: 50),
             ],

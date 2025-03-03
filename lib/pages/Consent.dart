@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:surveyflow/farmerident.dart';
+import 'package:surveyflow/pages/cover.dart';
+import 'package:surveyflow/pages/endcollection.dart';
+import 'package:surveyflow/pages/farmerident.dart';
 import 'package:surveyflow/fields/datepickerfield.dart';
 import 'package:surveyflow/fields/dropdown.dart';
 import 'package:surveyflow/fields/gpsfield.dart';
 import 'package:surveyflow/fields/radiobuttons.dart';
+import 'package:surveyflow/pages/remediation.dart';
+import 'package:surveyflow/pages/sensitization.dart';
 
 class Consent extends StatelessWidget {
   const Consent({super.key});
@@ -57,21 +61,72 @@ class Consent extends StatelessWidget {
                 'COVER',
                 style: GoogleFonts.poppins(fontWeight: FontWeight.w500),
               ),
-              onTap: () => Navigator.pop(context),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Questionnaire()),
+                );
+              },
             ),
             ListTile(
               title: Text(
                 'CONSENT AND LOCATION',
                 style: GoogleFonts.poppins(fontWeight: FontWeight.w500),
               ),
-              onTap: () => Navigator.pop(context),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Consent()),
+                );
+              },
             ),
             ListTile(
               title: Text(
                 'FARMER IDENTIFICATION',
                 style: GoogleFonts.poppins(fontWeight: FontWeight.w500),
               ),
-              onTap: () => Navigator.pop(context),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Farmerident()),
+                );
+              },
+            ),
+            ListTile(
+              title: Text(
+                'REMEDIATION',
+                style: GoogleFonts.poppins(fontWeight: FontWeight.w500),
+              ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Remediation()),
+                );
+              },
+            ),
+            ListTile(
+              title: Text(
+                'SENSITIZATION',
+                style: GoogleFonts.poppins(fontWeight: FontWeight.w500),
+              ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Sensitization()),
+                );
+              },
+            ),
+            ListTile(
+              title: Text(
+                'END OF COLLECTION',
+                style: GoogleFonts.poppins(fontWeight: FontWeight.w500),
+              ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Endcollection()),
+                );
+              },
             ),
           ],
         ),
@@ -150,23 +205,58 @@ class Consent extends StatelessWidget {
                   'Nobody',
                 ],
               ),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => Farmerident()));
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF00754B),
-                  foregroundColor: Colors.white,
-                  padding: EdgeInsets.symmetric(horizontal: 70, vertical: 12),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // Add this
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const Questionnaire()),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF00754B),
+                      foregroundColor: Colors.white,
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 10, vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                    ),
+                    child: Text(
+                      'PREV ',
+                      style: GoogleFonts.inter(fontWeight: FontWeight.w400),
+                    ),
                   ),
-                ),
-                child: Text(
-                  'TO CONTINUE ',
-                  style: GoogleFonts.inter(fontWeight: FontWeight.w700),
-                ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const Farmerident()),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF00754B),
+                      foregroundColor: Colors.white,
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 10, vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                    ),
+                    child: Text(
+                      'NEXT ',
+                      style: GoogleFonts.inter(fontWeight: FontWeight.w400),
+                    ),
+                  ),
+                ], // Close children list
               ),
               const SizedBox(height: 50),
             ],
