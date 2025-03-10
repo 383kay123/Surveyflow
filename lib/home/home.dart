@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:surveyflow/pages/Startsurvey.dart';
 import 'package:surveyflow/pages/cover.dart';
+import 'package:surveyflow/pages/dynamic.dart';
 
 class Homepage extends StatelessWidget {
   const Homepage({super.key});
@@ -42,13 +44,25 @@ class Homepage extends StatelessWidget {
             ),
             ListTile(
               title: Text(
-                'COVER',
+                'HOME ',
                 style: GoogleFonts.poppins(fontWeight: FontWeight.w500),
               ),
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => Questionnaire()),
+                  MaterialPageRoute(builder: (context) => Homepage()),
+                );
+              },
+            ),
+            ListTile(
+              title: Text(
+                'SURVEYS',
+                style: GoogleFonts.poppins(fontWeight: FontWeight.w500),
+              ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => SurveyListPage()),
                 );
               },
             ),
@@ -73,22 +87,26 @@ class Homepage extends StatelessWidget {
               {
                 'title': 'Start Survey',
                 'subtitle': 'Select a survey',
-                'icon': Icons.assignment
+                'icon': Icons.assignment,
+                'page': const SurveyListPage(),
               },
               {
                 'title': 'View Data',
                 'subtitle': 'Check survey results',
-                'icon': Icons.bar_chart
+                'icon': Icons.bar_chart,
+                'page': const Questionnaire(),
               },
               {
                 'title': 'Survey Preview',
                 'subtitle': 'View survey divisions',
-                'icon': Icons.favorite
+                'icon': Icons.favorite,
+                'page': const Questionnaire(),
               },
               {
                 'title': 'Settings',
                 'subtitle': 'Customize app',
-                'icon': Icons.settings
+                'icon': Icons.settings,
+                'page': DynamicSurveyPage(),
               },
             ];
 
@@ -97,6 +115,7 @@ class Homepage extends StatelessWidget {
               cardData[index]['title']!,
               cardData[index]['subtitle']!,
               cardData[index]['icon'] as IconData,
+              cardData[index]['page'] as Widget,
             );
           },
         ),
@@ -104,18 +123,19 @@ class Homepage extends StatelessWidget {
     );
   }
 
-  Widget _buildCard(
-      BuildContext context, String title, String subtitle, IconData icon) {
+  Widget _buildCard(BuildContext context, String title, String subtitle,
+      IconData icon, Widget destination) {
     return GestureDetector(
       onTap: () {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Tapped on $title')),
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => destination),
         );
       },
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         decoration: BoxDecoration(
-          color: const Color(0xFFE3F2FD), // Light green background
+          color: const Color(0xFFE3F2FD), // Light blue background
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
@@ -131,7 +151,11 @@ class Homepage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Icon(icon, size: 30, color: Colors.green[700]), // Icon
+              Icon(
+                icon,
+                size: 30,
+                color: Color(0xFF00754B),
+              ), // Icon
               const SizedBox(height: 8),
               Text(title,
                   style: GoogleFonts.poppins(

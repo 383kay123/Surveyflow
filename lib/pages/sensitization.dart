@@ -19,7 +19,7 @@ class Sensitization extends StatelessWidget {
         title: Text(
           'SENSITIZATION',
           style: GoogleFonts.poppins(
-              fontWeight: FontWeight.w700, color: Colors.white),
+              fontSize: 18, fontWeight: FontWeight.w500, color: Colors.white),
         ),
         centerTitle: true,
         backgroundColor: const Color(0xFF006A4E),
@@ -31,6 +31,15 @@ class Sensitization extends StatelessWidget {
             },
           ),
         ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.sync,
+                color: Colors.white), // Change the icon here
+            onPressed: () {
+              // Add functionality here
+            },
+          ),
+        ],
       ),
       backgroundColor: Colors.grey[100],
       drawer: Drawer(
@@ -130,128 +139,136 @@ class Sensitization extends StatelessWidget {
           ],
         ),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Center(
-                      child: Text(
-                        'Fill out the survey',
-                        style: GoogleFonts.poppins(
-                            fontWeight: FontWeight.w500, fontSize: 16),
+      body: Stack(
+        children: [
+          // The main scrollable content
+          Padding(
+            padding: const EdgeInsets.only(
+                bottom: 70), // Add padding to make room for bottom buttons
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Center(
+                        child: Text(
+                          'Fill out the survey',
+                          style: GoogleFonts.poppins(
+                              fontWeight: FontWeight.w500, fontSize: 16),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      RadioButtonField(
+                        question:
+                            'Have you sensitized the household members on Good Parenting?',
+                        options: [
+                          'Yes',
+                          'No',
+                        ],
+                      ),
+                      RadioButtonField(
+                        question:
+                            'Have you sensitized the household members on Child Protection?',
+                        options: [
+                          'Yes',
+                          'No',
+                        ],
+                      ),
+                      RadioButtonField(
+                        question:
+                            'Have you sensitized the household members on Safe Labour Practices?',
+                        options: [
+                          'Yes',
+                          'No',
+                        ],
+                      ),
+                      ..._buildQuestionFields([
+                        'How many female adults were present during the sensitization?',
+                      ]),
+                      ..._buildQuestionFields([
+                        'How many male adults were present during the sensitization?',
+                      ]),
+                      RadioButtonField(
+                        question:
+                            'Can you take a picture of the respondent and yourself?',
+                        options: [
+                          'Yes',
+                          'No',
+                        ],
+                      ),
+                      Text(
+                        'Please take a picture of the sensitization being implemented with the family and the child',
+                        style: GoogleFonts.poppins(fontWeight: FontWeight.w500),
+                      ),
+                      SizedBox(height: 10),
+                      PictureField(),
+                      SizedBox(height: 16),
+                      ..._buildQuestionFields([
+                        'What are your observations regarding the reaction from the parents on the sensitization provided?',
+                      ]),
+                      const SizedBox(height: 50),
+                    ]),
+              ),
+            ),
+          ),
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: 0,
+            child: Container(
+              color: Colors.grey[100], // Match background color
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => Farmerident()),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF00754B),
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5),
                       ),
                     ),
-                    SizedBox(
-                      height: 10,
+                    child: Text('PREV',
+                        style: GoogleFonts.inter(fontWeight: FontWeight.w400)),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const Endcollection()),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF00754B),
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5),
+                      ),
                     ),
-                    RadioButtonField(
-                      question:
-                          'Have you sensitized the household members on Good Parenting?',
-                      options: [
-                        'Yes',
-                        'No',
-                      ],
-                    ),
-                    RadioButtonField(
-                      question:
-                          'Have you sensitized the household members on Child Protection?',
-                      options: [
-                        'Yes',
-                        'No',
-                      ],
-                    ),
-                    RadioButtonField(
-                      question:
-                          'Have you sensitized the household members on Safe Labour Practices?',
-                      options: [
-                        'Yes',
-                        'No',
-                      ],
-                    ),
-                    ..._buildQuestionFields([
-                      'How many female adults were present during the sensitization?',
-                    ]),
-                    ..._buildQuestionFields([
-                      'How many male adults were present during the sensitization?',
-                    ]),
-                    RadioButtonField(
-                      question:
-                          'Can you take a picture of the respondent and yourself?',
-                      options: [
-                        'Yes',
-                        'No',
-                      ],
-                    ),
-                    Text(
-                        'Please take a picture of the sensitization being implemented with the family and the child'),
-                    PictureField(),
-                    ..._buildQuestionFields([
-                      'What are your observations regarding the reaction from the parents on the sensitization provided?',
-                    ]),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        // Add this
-                        ElevatedButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const Remediation()),
-                            );
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF00754B),
-                            foregroundColor: Colors.white,
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 12),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5),
-                            ),
-                          ),
-                          child: Text(
-                            'PREVIOUS ',
-                            style:
-                                GoogleFonts.inter(fontWeight: FontWeight.w400),
-                          ),
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        ElevatedButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const Endcollection()),
-                            );
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF00754B),
-                            foregroundColor: Colors.white,
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 12),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5),
-                            ),
-                          ),
-                          child: Text(
-                            'NEXT ',
-                            style:
-                                GoogleFonts.inter(fontWeight: FontWeight.w400),
-                          ),
-                        ),
-                      ], // Close children list
-                    ),
-                    const SizedBox(height: 50),
-                  ]),
+                    child: Text('NEXT',
+                        style: GoogleFonts.inter(fontWeight: FontWeight.w400)),
+                  ),
+                ],
+              ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

@@ -5,6 +5,7 @@ import 'package:surveyflow/pages/farmerident.dart';
 import 'package:surveyflow/home/home.dart';
 import 'package:surveyflow/pages/remediation.dart';
 import 'package:surveyflow/pages/sensitization.dart';
+import 'package:surveyflow/pages/surveylogic.dart';
 import 'package:surveyflow/splash_screen.dart';
 
 void main() {
@@ -16,9 +17,9 @@ class Surveyflow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Homepage(),
+      home: ChildrenOfHouseholdPage(),
     );
   }
 }

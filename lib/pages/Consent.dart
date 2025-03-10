@@ -32,6 +32,15 @@ class Consent extends StatelessWidget {
             },
           ),
         ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.sync,
+                color: Colors.white), // Change the icon here
+            onPressed: () {
+              // Add functionality here
+            },
+          ),
+        ],
       ),
       backgroundColor: Colors.grey[100],
       drawer: Drawer(
@@ -131,177 +140,146 @@ class Consent extends StatelessWidget {
           ],
         ),
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Center(
-                child: Text(
-                  'Fill out the survey',
-                  style: GoogleFonts.poppins(
-                      fontWeight: FontWeight.w500, fontSize: 16),
-                ),
-              ),
-              const SizedBox(height: 16),
-
-              // Directly add DatePickerField here
-              DatePickerField(
-                  question: 'Record the interview start/pick up time'),
-              const SizedBox(height: 16),
-
-// Using the GPSField
-              GPSField(question: 'GPS point of the household'),
-              const SizedBox(height: 16),
-
-              // Radio button for farmer availability
-              RadioButtonField(
-                question: 'Select the type of community',
-                options: ['Town', 'Village', 'Camp'],
-              ),
-
-              RadioButtonField(
-                question:
-                    'Does the farmer reside in the community stated on the cover?',
-                options: [
-                  'Yes',
-                  'No',
-                ],
-              ),
-              // Add QuestionFields
-              ..._buildQuestionFields([
-                'If No, provide the name of the community the farmer resides in',
-              ]),
-
-              RadioButtonField(
-                question: 'Is the farmer available?',
-                options: [
-                  'Yes',
-                  'No',
-                ],
-              ),
-
-              DropdownField(
-                question: 'Select the type of community',
-                options: [
-                  'Non-Resident',
-                  'Deceased',
-                  'Doesnt work with Touton anymore',
-                  'Other',
-                ],
-              ),
-
-              ..._buildQuestionFields([
-                'Other to specify',
-                'Who is available to answer for the farmer?',
-              ]),
-
-              DropdownField(
-                question: 'Select the type of community',
-                options: [
-                  'Caretaker',
-                  'Spouse',
-                  'Nobody',
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            padding: const EdgeInsets.only(bottom: 80), // Space for buttons
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Add this
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const Questionnaire()),
-                      );
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF00754B),
-                      foregroundColor: Colors.white,
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 10, vertical: 12),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                    ),
+                  Center(
                     child: Text(
-                      'PREV ',
-                      style: GoogleFonts.inter(fontWeight: FontWeight.w400),
+                      'Fill out the survey',
+                      style: GoogleFonts.poppins(
+                          fontWeight: FontWeight.w500, fontSize: 16),
                     ),
                   ),
-                  SizedBox(
-                    width: 10,
+                  const SizedBox(height: 16),
+                  DatePickerField(question: 'Record the interview start time'),
+                  const SizedBox(height: 16),
+                  GPSField(question: 'GPS point of the household'),
+                  const SizedBox(height: 16),
+                  RadioButtonField(
+                    question: 'Select the type of community',
+                    options: ['Town', 'Village', 'Camp'],
+                    onChanged: (String) {},
                   ),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const Farmerident()),
-                      );
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF00754B),
-                      foregroundColor: Colors.white,
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 10, vertical: 12),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                    ),
-                    child: Text(
-                      'NEXT ',
-                      style: GoogleFonts.inter(fontWeight: FontWeight.w400),
-                    ),
+                  RadioButtonField(
+                    question:
+                        'Does the farmer reside in the community stated on the cover?',
+                    options: ['Yes', 'No'],
+                    onChanged: (String) {},
                   ),
-                ], // Close children list
+                  _buildQuestionField(
+                      'If No, provide the name of the community the farmer resides in'),
+                  RadioButtonField(
+                    question: 'Is the farmer available?',
+                    options: ['Yes', 'No'],
+                    onChanged: (String) {},
+                  ),
+                  DropdownField(
+                    question: 'Farmer status',
+                    options: [
+                      'Non-Resident',
+                      'Deceased',
+                      'Doesn’t work with Touton anymore',
+                      'Other',
+                    ],
+                  ),
+                  _buildQuestionField('Other to specify'),
+                  _buildQuestionField('Who is available to answer for farmer?'),
+                  DropdownField(
+                    question: 'Select respondent',
+                    options: ['Caretaker', 'Spouse', 'Nobody'],
+                  ),
+                  const SizedBox(height: 100), // Extra space for scrolling
+                ],
               ),
-              const SizedBox(height: 50),
-            ],
+            ),
           ),
-        ),
+          Positioned(
+            bottom: 16,
+            left: 0,
+            right: 0,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => Questionnaire()),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF00754B),
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                    ),
+                    child: Text('PREV',
+                        style: GoogleFonts.inter(fontWeight: FontWeight.w400)),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => Farmerident()),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF00754B),
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                    ),
+                    child: Text('NEXT',
+                        style: GoogleFonts.inter(fontWeight: FontWeight.w400)),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
 
-  List<Widget> _buildQuestionFields(List<String> questions) {
-    return questions
-        .map((question) => Padding(
-              padding: const EdgeInsets.only(bottom: 16.0),
-              child: QuestionField(question: question),
-            ))
-        .toList();
-  }
-}
-
-class QuestionField extends StatelessWidget {
-  final String question;
-
-  const QuestionField({super.key, required this.question});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          question,
-          style: GoogleFonts.poppins(fontSize: 14, fontWeight: FontWeight.w500),
-        ),
-        const SizedBox(height: 6),
-        TextField(
-          decoration: InputDecoration(
-            filled: true,
-            border: OutlineInputBorder(
-              borderSide: BorderSide.none,
-              borderRadius: BorderRadius.circular(10.0),
-            ),
-            contentPadding: const EdgeInsets.symmetric(horizontal: 12.0),
+  Widget _buildQuestionField(String question) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            question,
+            style:
+                GoogleFonts.poppins(fontSize: 14, fontWeight: FontWeight.w500),
           ),
-        ),
-      ],
+          const SizedBox(height: 6),
+          TextField(
+            decoration: InputDecoration(
+              filled: true,
+              border: OutlineInputBorder(
+                borderSide: BorderSide.none,
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              contentPadding: const EdgeInsets.symmetric(horizontal: 12.0),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

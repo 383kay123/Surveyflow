@@ -18,7 +18,7 @@ class Remediation extends StatelessWidget {
         title: Text(
           'REMEDIATION',
           style: GoogleFonts.poppins(
-              fontWeight: FontWeight.w700, color: Colors.white),
+              fontSize: 18, fontWeight: FontWeight.w500, color: Colors.white),
         ),
         centerTitle: true,
         backgroundColor: const Color(0xFF006A4E),
@@ -30,6 +30,15 @@ class Remediation extends StatelessWidget {
             },
           ),
         ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.sync,
+                color: Colors.white), // Change the icon here
+            onPressed: () {
+              // Add functionality here
+            },
+          ),
+        ],
       ),
       backgroundColor: Colors.grey[100],
       drawer: Drawer(
@@ -129,12 +138,15 @@ class Remediation extends StatelessWidget {
           ],
         ),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
+      body: Stack(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(
+                bottom: 70), // Add padding to make room for bottom buttons
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Center(
@@ -180,66 +192,66 @@ class Remediation extends StatelessWidget {
                     ..._buildQuestionFields([
                       'Other',
                     ]),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        // Add this
-                        ElevatedButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const Farmerident()),
-                            );
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF00754B),
-                            foregroundColor: Colors.white,
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 12),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5),
-                            ),
-                          ),
-                          child: Text(
-                            'PREV ',
-                            style:
-                                GoogleFonts.inter(fontWeight: FontWeight.w400),
-                          ),
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        ElevatedButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const Sensitization()),
-                            );
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF00754B),
-                            foregroundColor: Colors.white,
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 12),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5),
-                            ),
-                          ),
-                          child: Text(
-                            'NEXT ',
-                            style:
-                                GoogleFonts.inter(fontWeight: FontWeight.w400),
-                          ),
-                        ),
-                      ], // Close children list
-                    ),
-                    const SizedBox(height: 50),
-                  ]),
+                  ], // Close children list
+                ),
+              ),
             ),
-          ],
-        ),
+          ),
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: 0,
+            child: Container(
+              color: Colors.grey[100], // Match background color
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => Farmerident()),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF00754B),
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                    ),
+                    child: Text('PREV',
+                        style: GoogleFonts.inter(fontWeight: FontWeight.w400)),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const Sensitization()),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF00754B),
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                    ),
+                    child: Text('NEXT',
+                        style: GoogleFonts.inter(fontWeight: FontWeight.w400)),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

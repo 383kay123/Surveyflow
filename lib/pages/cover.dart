@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:surveyflow/home/home.dart';
 import 'package:surveyflow/pages/Consent.dart';
 import 'package:surveyflow/pages/endcollection.dart';
 import 'package:surveyflow/pages/farmerident.dart';
@@ -138,94 +139,94 @@ class Questionnaire extends StatelessWidget {
           ],
         ),
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Center(
-                child: Text(
-                  'Fill out the survey',
-                  style: GoogleFonts.poppins(
-                      fontWeight: FontWeight.w500, fontSize: 16),
+      body: Stack(children: [
+        SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Center(
+                  child: Text(
+                    'Fill out the survey',
+                    style: GoogleFonts.poppins(
+                        fontWeight: FontWeight.w500, fontSize: 16),
+                  ),
                 ),
-              ),
-              const SizedBox(height: 16),
-              ..._buildQuestionFields([
-                'Enumerator name',
-                'Enumerator Code',
-                'Country',
-                'Region',
-                'District',
-                'Society',
-                'Society Code',
-                'Farmer Code',
-                'Farmer Surname',
-                'Farmer First Name',
-                'Risk Classification',
-                'Client',
-                'Number of farmer children aged 5-17 captured',
-                'List of children aged 5 to 17 captured in House',
-              ]),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  // Add this
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const Consent()),
-                      );
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF00754B),
-                      foregroundColor: Colors.white,
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 10, vertical: 12),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                    ),
-                    child: Text(
-                      'PREV ',
-                      style: GoogleFonts.inter(fontWeight: FontWeight.w400),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const Consent()),
-                      );
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF00754B),
-                      foregroundColor: Colors.white,
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 10, vertical: 12),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                    ),
-                    child: Text(
-                      'NEXT ',
-                      style: GoogleFonts.inter(fontWeight: FontWeight.w400),
-                    ),
-                  ),
-                ], // Close children list
-              ),
-              const SizedBox(height: 50),
-            ],
+                const SizedBox(height: 16),
+                ..._buildQuestionFields([
+                  'Enumerator name',
+                  'Enumerator Code',
+                  'Country',
+                  'Region',
+                  'District',
+                  'Society',
+                  'Society Code',
+                  'Farmer Code',
+                  'Farmer Surname',
+                  'Farmer First Name',
+                  'Risk Classification',
+                  'Client',
+                  'Number of farmer children aged 5-17 captured',
+                  'List of children aged 5 to 17 captured in House',
+                ]),
+                const SizedBox(height: 50),
+              ],
+            ),
           ),
         ),
-      ),
+        Positioned(
+          bottom: 16,
+          left: 0,
+          right: 0,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Homepage()),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF00754B),
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 12),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                  ),
+                  child: Text('PREV',
+                      style: GoogleFonts.inter(fontWeight: FontWeight.w400)),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const Consent()),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF00754B),
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 12),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                  ),
+                  child: Text('NEXT',
+                      style: GoogleFonts.inter(fontWeight: FontWeight.w400)),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ]),
     );
   }
 

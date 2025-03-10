@@ -1,22 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class RadioButtonField extends StatefulWidget {
+class RadioButtonField extends StatelessWidget {
   final String question;
   final List<String> options;
+  final String? value;
+  final Function(String)? onChanged;
 
   const RadioButtonField({
-    super.key,
+    Key? key,
     required this.question,
     required this.options,
-  });
-
-  @override
-  _RadioButtonFieldState createState() => _RadioButtonFieldState();
-}
-
-class _RadioButtonFieldState extends State<RadioButtonField> {
-  String? selectedOption; // Stores the selected radio button value
+    this.value,
+    this.onChanged,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -24,27 +21,26 @@ class _RadioButtonFieldState extends State<RadioButtonField> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          widget.question,
+          question,
           style: GoogleFonts.poppins(fontSize: 14, fontWeight: FontWeight.w500),
         ),
         const SizedBox(height: 8),
         Wrap(
-          spacing: 16.0, // Space between radio button groups
-          runSpacing: 8.0, // Space between rows if wrapped
-          children: widget.options.map((option) {
+          spacing: 16.0,
+          runSpacing: 8.0,
+          children: options.map((option) {
             return Row(
-              mainAxisSize: MainAxisSize.min, // Prevents unnecessary stretching
+              mainAxisSize: MainAxisSize.min,
               children: [
                 Radio<String>(
                   value: option,
-                  groupValue: selectedOption,
-                  onChanged: (value) {
-                    setState(() {
-                      selectedOption = value;
-                    });
+                  groupValue: value,
+                  onChanged: (newValue) {
+                    if (newValue != null) {
+                      onChanged!(newValue);
+                    }
                   },
-                  activeColor:
-                      const Color(0xFF00754B), // Your app's primary color
+                  activeColor: const Color(0xFF00754B),
                 ),
                 Text(
                   option,
