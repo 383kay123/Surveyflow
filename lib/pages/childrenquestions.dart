@@ -342,7 +342,6 @@ class _ChildQuestionsPageState extends State<ChildQuestionsPage> {
                                             value);
                                       },
                                     ),
-                                    // Community questions appear after selecting Yes for birth certificate
                                     if (surveyLogic.formState[
                                             'child_birth_certificates${widget.childNumber}'] ==
                                         'Yes') ...[
@@ -372,8 +371,48 @@ class _ChildQuestionsPageState extends State<ChildQuestionsPage> {
                                         singleSelect: true,
                                       ),
                                     ],
+                                    if (surveyLogic.formState[
+                                            'child_birth_certificates${widget.childNumber}'] ==
+                                        'No') ...[
+                                      const SizedBox(height: 20),
+                                      const Divider(
+                                          height: 1, color: Color(0xFFE0E0E0)),
+                                      const SizedBox(height: 20),
+                                      QuestionField(
+                                        question: "If No, please specify why",
+                                        cautionText: "Mandatory",
+                                        keyboardType: TextInputType.text,
+                                        onChanged: (value) {
+                                          onFieldChanged(
+                                              'child_birth_certificates_why${widget.childNumber}',
+                                              value);
+                                        },
+                                      ),
+                                      const SizedBox(height: 20),
+                                      DropdownCheckboxField(
+                                        question:
+                                            "Is child ${widget.childNumber} born in this community?",
+                                        cautionText: "Mandatory",
+                                        options: [
+                                          "Yes",
+                                          "No, he was born in this district but different community within the district",
+                                          "No, he was born in this region but different district within the region",
+                                          "No, he was born in another region of Ghana",
+                                          "No, he was born in another country",
+                                        ],
+                                        onChanged: (Map<String, bool>
+                                            selectedOptions) {
+                                          setState(() {
+                                            surveyLogic.updateValue(
+                                                'child_community${widget.childNumber}',
+                                                selectedOptions);
+                                          });
+                                        },
+                                        singleSelect: true,
+                                      ),
+                                    ],
                                   ],
-                                ),
+                                )
                               ],
                             ],
                           ),
@@ -428,39 +467,43 @@ class _ChildQuestionsPageState extends State<ChildQuestionsPage> {
                   onChanged: (value) {
                     onFieldChanged('hh_head${widget.childNumber}', value);
                   },
+                  singleSelect: true,
                 ),
               if (surveyLogic.formState['hh_head${widget.childNumber}']
                       ?["Other (to specify)"] ==
-                  true)
+                  true) ...[
+                const SizedBox(height: 20),
                 QuestionField(
-                  question: "Other",
-                  cautionText: 'Mandatory',
+                  question: "Please specify the relationship",
+                  cautionText: "Mandatory",
                   keyboardType: TextInputType.text,
                   onChanged: (value) {
-                    onFieldChanged('hh_headAutre${widget.childNumber}', value);
+                    onFieldChanged('hh_head_other${widget.childNumber}', value);
                   },
                 ),
-              DropdownCheckboxField(
-                question:
-                    'Why does the child ${widget.childNumber} not live with his/her family',
-                options: [
-                  'Parents deceased',
-                  'Cant take care of me',
-                  'Abandoned',
-                  'School reasons',
-                  'A recruitment agency brought me here',
-                  'I did not want to live with my parents',
-                  'Other (to specify)',
-                  'Dont know',
-                ],
-                onChanged: (Map<String, bool> selectedOptions) {
-                  setState(() {
-                    surveyLogic.updateValue(
-                        'child_parent${widget.childNumber}', selectedOptions);
-                  });
-                },
-                singleSelect: true,
-              ),
+                const SizedBox(height: 20),
+                DropdownCheckboxField(
+                  question:
+                      'Why does the child ${widget.childNumber} not live with his/her family',
+                  options: [
+                    'Parents deceased',
+                    'Cant take care of me',
+                    'Abandoned',
+                    'School reasons',
+                    'A recruitment agency brought me here',
+                    'I did not want to live with my parents',
+                    'Other (to specify)',
+                    'Dont know',
+                  ],
+                  onChanged: (Map<String, bool> selectedOptions) {
+                    setState(() {
+                      surveyLogic.updateValue(
+                          'child_parent${widget.childNumber}', selectedOptions);
+                    });
+                  },
+                  singleSelect: true,
+                ),
+              ],
               if (surveyLogic.formState['child_parent${widget.childNumber}']
                       ?["Other (to specify)"] ==
                   true)
