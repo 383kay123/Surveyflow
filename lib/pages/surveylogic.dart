@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:surveyflow/fields/dropcheckbox.dart';
+import 'package:surveyflow/fields/questionfield.dart';
 import 'package:surveyflow/fields/radiobuttons.dart';
+import 'package:surveyflow/pages/childrenquestions.dart';
+import 'package:surveyflow/surveymodel.dart';
 // This implementation provides the logic for the Children of Household survey form
 // It handles field visibility, validation, skip patterns, and data consistency
 
@@ -317,319 +320,137 @@ class ChildrenOfHouseholdPage extends StatefulWidget {
 class _ChildrenOfHouseholdPageState extends State<ChildrenOfHouseholdPage> {
   final SurveyLogic surveyLogic = SurveyLogic();
 
-  @override
-  void initState() {
-    super.initState();
-    surveyLogic.initializeForm();
-  }
-
   void onFieldChanged(String fieldName, dynamic value) {
     setState(() {
       surveyLogic.updateValue(fieldName, value);
     });
   }
 
-  List<Widget> _buildQuestionFields(dynamic questions,
-      {Map<String, String>? fieldMapping}) {
-    List<Widget> fields = [];
-
-    if (questions is List<String>) {
-      fields = questions.map((question) {
-        String fieldName = fieldMapping?[question] ?? question;
-        return Padding(
-          padding: const EdgeInsets.only(bottom: 16.0),
-          child: QuestionField(
-            question: question,
-            onChanged: (value) => onFieldChanged(fieldName, value),
+  List<Widget> getQuestionWidgets() {
+    return [
+      Column(
+        children: [
+          RadioButtonField(
+            question:
+                "Are there children living in the respondent's household ?",
+            options: ['Yes', 'No'],
+            value: surveyLogic.formState['isChildOfFarmer'],
+            onChanged: (value) {
+              onFieldChanged('isChildOfFarmer', value);
+              if (value == 'No') {
+                showDialog(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (BuildContext context) => AlertDialog(
+                    title: Text('Survey End'),
+                    content: Text(
+                        'No children in household. Survey cannot continue.'),
+                    actions: [
+                      TextButton(
+                        style: TextButton.styleFrom(
+                          backgroundColor: Color(0xFF006A4E),
+                          foregroundColor: Colors.white,
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          Navigator.of(context).pop();
+                        },
+                        child: Text('Close Survey'),
+                      ),
+                    ],
+                  ),
+                );
+              }
+            },
           ),
-        );
-      }).toList();
-    } else if (questions is Map<String, String>) {
-      fields = questions.entries.map((entry) {
-        return Padding(
-          padding: const EdgeInsets.only(bottom: 16.0),
-          child: QuestionField(
-            question: entry.value,
-            onChanged: (value) => onFieldChanged(entry.key, value),
-          ),
-        );
-      }).toList();
-    } else if (questions is String) {
-      String fieldName = fieldMapping?[questions] ?? questions;
-      fields = [
-        Padding(
-          padding: const EdgeInsets.only(bottom: 16.0),
-          child: QuestionField(
-            question: questions,
-            onChanged: (value) => onFieldChanged(fieldName, value),
-          ),
-        ),
-      ];
-    }
-
-    return fields;
-  }
-
-  // Check if a field should be shown based on logic
-  bool isFieldVisible(String fieldName) {
-    return surveyLogic.sectionVisibility[fieldName] ?? true;
+          if (surveyLogic.formState['isChildOfFarmer'] == 'Yes')
+            Column(
+              children: [
+                SizedBox(height: 20),
+                QuestionField(
+                  question:
+                      'Out of the number of children stated above, How many are between the ages of 5 and 17?',
+                  keyboardType: TextInputType.number,
+                  onChanged: (value) {
+                    onFieldChanged('childrenBetween5And17', value);
+                  },
+                  cautionText:
+                      "Required. Count the producer's children as well as other children living in the farmer's household",
+                ),
+                if (surveyLogic.formState['childrenBetween5And17'] != null)
+                  Column(
+                    children: List.generate(
+                      int.tryParse(surveyLogic
+                              .formState['childrenBetween5And17']
+                              .toString()) ??
+                          0,
+                      (index) => Padding(
+                        padding: const EdgeInsets.only(top: 16.0),
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Color(0xFF006A4E),
+                            minimumSize: Size(double.infinity, 50),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                          ),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ChildQuestionsPage(
+                                  childNumber: index + 1,
+                                  totalChildren: int.parse(surveyLogic
+                                      .formState['childrenBetween5And17']),
+                                ),
+                              ),
+                            );
+                          },
+                          child: Text(
+                            'Children of the household ${index + 1}',
+                            style: GoogleFonts.poppins(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+        ],
+      ),
+    ];
   }
 
   @override
   Widget build(BuildContext context) {
+    bool isNoSelected = surveyLogic.formState['isChildOfFarmer'] == 'No';
+
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text('Children of the Household'),
+        backgroundColor: isNoSelected ? Color(0xFF006A4E) : Colors.blue,
+        title: Text(
+          'Children of the Household',
+          style: GoogleFonts.inter(
+              fontSize: 17, fontWeight: FontWeight.w600, color: Colors.white),
+        ),
+        centerTitle: true,
       ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Form(
-            child:
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              // Basic header
-              Text(
-                'CHILDREN OF THE HOUSEHOLD',
-                style: GoogleFonts.poppins(
-                    fontWeight: FontWeight.w500, fontSize: 10),
-              ),
-              Text(
-                'Tableau: CHILDREN OF THE HOUSEHOLD - %ROSTERTITLE%',
-                style: GoogleFonts.poppins(
-                    fontWeight: FontWeight.w600, fontSize: 16),
-              ),
-              SizedBox(height: 10),
-
-              // Child identification fields
-              RadioButtonField(
-                question:
-                    'Is the child among the list of children declared in the cover to be the farmers children',
-                options: ['Yes', 'No'],
-                value: surveyLogic.formState['isChildOfFarmer'],
-                onChanged: (value) => onFieldChanged('isChildOfFarmer', value),
-              ),
-
-              TextFormField(
-                decoration: InputDecoration(
-                  labelText:
-                      'Enter the number attached to the child name in the cover so we can identify the child in question',
-                ),
-                onChanged: (value) => onFieldChanged('childIdentifier', value),
-              ),
-
-              DropdownField(
-                question: 'Can the child be surveyed now?',
-                options: ['Yes', 'No'],
-                value: surveyLogic.formState['canChildBeSurveyed'],
-                onChanged: (value) {
-                  setState(() {
-                    surveyLogic.updateValue('canChildBeSurveyed', value);
-                  });
-                },
-              ),
-
-              if (surveyLogic.formState['showSurveyNotPossibleReasons'] == true)
-                CheckboxField(
-                  question: 'If not, what are the reasons?',
-                  options: [
-                    'The child is at school',
-                    'The child has gone to work on the cocoa farm',
-                    'Child is busy doing homework',
-                    'Child works outside the household',
-                    'The child is too young',
-                    'The child is sick',
-                    'The child has travelled',
-                    'The child has gone out to play',
-                    'Other',
-                  ],
-                  value:
-                      surveyLogic.formState['surveyNotPossibleReasons'] ?? [],
-                  onChanged: (selectedOptions) {
-                    setState(() {
-                      surveyLogic.updateValue(
-                          'surveyNotPossibleReasons', selectedOptions);
-                      // Show text field when "Other" is selected
-                      surveyLogic.formState['showOtherReasonField'] =
-                          selectedOptions.contains('Other');
-                    });
-                  },
-                ),
-
-              // Add "Other reasons" field
-              if (surveyLogic.formState['showOtherReasonField'])
-                ...(_buildQuestionFields(['Other reasons'])),
-
-              // Conditional proxy respondent fields
-              if (isFieldVisible('proxyRespondent'))
-                DropdownField(
-                  question:
-                      'Who is answering for the child since he/she is not available?',
-                  options: [
-                    'The parents or legal guardians',
-                    'Another family member of the child',
-                    'One of the childs siblings',
-                    'Other'
-                  ],
-                  value: surveyLogic.formState['proxyRespondent'],
-                  onChanged: (value) {
-                    onFieldChanged('proxyRespondent', value);
-                  },
-                ),
-              SizedBox(
-                height: 10,
-              ),
-              if (surveyLogic.formState['proxyRespondent'] == 'Other')
-                ...(_buildQuestionFields(['If other, please specify'])),
-
-              // Add first name field
-              ...(_buildQuestionFields(
-                  {'childFirstName': "Child's first name"})),
-
-// Add surname field
-              ...(_buildQuestionFields({'childSurname': "Child's surname"})),
-
-// Add gender field with dynamic name
-              Padding(
-                padding: const EdgeInsets.only(bottom: 16.0),
-                child: RadioButtonField(
-                  question:
-                      'Gender of ${surveyLogic.formState['childFirstName'] ?? ''} ${surveyLogic.formState['childSurname'] ?? ''}',
-                  options: ['Boy', 'Girl'],
-                  value: surveyLogic.formState['gender'],
-                  onChanged: (value) => onFieldChanged('gender', value),
-                ),
-              ),
-
-              DatePickerField(
-                childFirstName: surveyLogic.formState['childFirstName'] ?? '',
-                childSurname: surveyLogic.formState['childSurname'] ?? '',
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              RadioButtonField(
-                question:
-                    'Does the child ${surveyLogic.formState['childFirstName'] ?? ''} ${surveyLogic.formState['childSurname'] ?? ''} have a birth certificate?',
-                options: ['Yes', 'No'],
-                value: surveyLogic.formState['hasBirthCertificate'],
-                onChanged: (value) =>
-                    onFieldChanged('hasBirthCertificate', value),
-              ),
-
-              if (surveyLogic.formState['hasBirthCertificate'] == 'No')
-                QuestionField(
-                  question: 'If No,please specify why',
-                  onChanged: (value) =>
-                      onFieldChanged('noBirthCertificateReason', value),
-                ),
-
-              DropdownCheckboxField(
-                question:
-                    "Is the child ${surveyLogic.formState['childFirstName']} born in this community?",
-                options: [
-                  'Yes',
-                  'No, he was born in this district but different community within the district',
-                  'No, he was born in this region but different district within the region',
-                  'No, he was born in another region of Ghana',
-                  'No, he was born in another country',
-                ],
-                singleSelect: true,
-                onChanged: (Map<String, bool> selectedOptions) {
-                  surveyLogic.updateValue('birthLocation', selectedOptions);
-
-                  // If born in another country is selected, show additional field
-                  if (selectedOptions['No, he was born in another country'] ==
-                      true) {
-                    surveyLogic.updateValue('showBirthCountryField', true);
-                  }
-                },
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              DropdownCheckboxField(
-                question:
-                    "In which country is the child ${surveyLogic.formState['childFirstName']} born?",
-                options: [
-                  'Benin',
-                  'Burkina Faso',
-                  'Ivory Coast',
-                  'Mali',
-                  'Niger',
-                  'Togo',
-                  'Other',
-                ],
-                singleSelect: true,
-                onChanged: (selectedOptions) =>
-                    surveyLogic.updateValue('birthCountry', selectedOptions),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              DropdownCheckboxField(
-                question:
-                    "Relationship of ${surveyLogic.formState['childFirstName']} to the head of the household ?",
-                options: [
-                  'Son/daughter',
-                  'Brother/sister',
-                  'Son-in-law/daughter-in-law',
-                  'Grandson/granddaughter',
-                  'Niece/nephew',
-                  'Cousin',
-                  'Child of the worker',
-                  'Child of the farm owner(only if the respondent is the caretaker)',
-                  'Other (to specify)',
-                ],
-                singleSelect: true,
-                onChanged: (selectedOptions) {
-                  surveyLogic.updateValue(
-                      'relationshipToHead', selectedOptions);
-                },
-              ),
-
-              if (surveyLogic.formState['relationshipToHead']
-                          ?.containsKey('Other (to specify)') ==
-                      true &&
-                  surveyLogic.formState['relationshipToHead']
-                          ?['Other (to specify)'] ==
-                      true)
-                QuestionField(
-                  question: "Please specify the relationship",
-                  onChanged: (value) =>
-                      surveyLogic.updateValue('otherRelationship', value),
-                ),
-
-              // Continue with other fields and logic...
-              // The above pattern would be repeated for all fields in the form,
-              // with conditional rendering based on the logic rules
-
-              // Submit button
-              ElevatedButton(
-                onPressed: () {
-                  // Submit the form
-                  Map<String, dynamic> submissionResult =
-                      surveyLogic.prepareSubmission();
-                  if (submissionResult['isValid']) {
-                    // Proceed with API submission or next step
-                    print('Form is valid, submitting...');
-                  } else {
-                    // Show validation errors
-                    print(
-                        'Form has errors: ${submissionResult['validationErrors']}');
-                    print(
-                        'Data inconsistencies: ${submissionResult['dataInconsistencies']}');
-                  }
-                },
-                child: Text('Submit'),
-              ),
-            ]),
+          child: Column(
+            children: getQuestionWidgets(),
           ),
         ),
       ),
     );
   }
 }
-
 // Let's also define the widget components used in the form
 // These are simplified versions - you'll need to implement them fully
 
@@ -722,42 +543,6 @@ class DropdownField extends StatelessWidget {
               );
             }).toList(),
           ),
-        ),
-      ],
-    );
-  }
-}
-
-class QuestionField extends StatelessWidget {
-  final String question;
-  final Function(String)? onChanged; // Add this line
-
-  const QuestionField({
-    super.key,
-    required this.question,
-    this.onChanged, // Add this line
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          question,
-          style: GoogleFonts.poppins(fontSize: 14, fontWeight: FontWeight.w500),
-        ),
-        const SizedBox(height: 6),
-        TextField(
-          decoration: InputDecoration(
-            filled: true,
-            border: OutlineInputBorder(
-              borderSide: BorderSide.none,
-              borderRadius: BorderRadius.circular(10.0),
-            ),
-            contentPadding: const EdgeInsets.symmetric(horizontal: 12.0),
-          ),
-          onChanged: onChanged, // Pass the callback to TextField
         ),
       ],
     );

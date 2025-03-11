@@ -6,6 +6,7 @@ class RadioButtonField extends StatelessWidget {
   final List<String> options;
   final String? value;
   final Function(String)? onChanged;
+  final String? cautionText;
 
   const RadioButtonField({
     Key? key,
@@ -13,6 +14,7 @@ class RadioButtonField extends StatelessWidget {
     required this.options,
     this.value,
     this.onChanged,
+    this.cautionText,
   }) : super(key: key);
 
   @override
@@ -24,29 +26,70 @@ class RadioButtonField extends StatelessWidget {
           question,
           style: GoogleFonts.poppins(fontSize: 14, fontWeight: FontWeight.w500),
         ),
-        const SizedBox(height: 8),
+        if (cautionText != null) ...[
+          const SizedBox(height: 8),
+          Text(
+            cautionText!,
+            style: GoogleFonts.poppins(
+              fontSize: 12,
+              color: Colors.red,
+              fontStyle: FontStyle.italic,
+            ),
+          ),
+        ],
+        const SizedBox(height: 12),
         Wrap(
-          spacing: 16.0,
-          runSpacing: 8.0,
+          spacing: 8.0,
+          runSpacing: 5.0,
           children: options.map((option) {
-            return Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Radio<String>(
-                  value: option,
-                  groupValue: value,
-                  onChanged: (newValue) {
-                    if (newValue != null) {
-                      onChanged!(newValue);
-                    }
-                  },
-                  activeColor: const Color(0xFF00754B),
+            return Container(
+              width: MediaQuery.of(context).size.width / 1,
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: value == option
+                      ? const Color(0xFF00754B)
+                      : Colors.grey.shade300,
+                  width: 1.5,
                 ),
-                Text(
-                  option,
-                  style: GoogleFonts.poppins(fontSize: 14),
+                borderRadius: BorderRadius.circular(12),
+                color: value == option ? const Color(0xFFE8F5F0) : Colors.white,
+              ),
+              child: InkWell(
+                borderRadius: BorderRadius.circular(12),
+                onTap: () => onChanged?.call(option),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8.0,
+                    vertical: 1.0,
+                  ),
+                  child: Row(
+                    children: [
+                      Radio<String>(
+                        value: option,
+                        groupValue: value,
+                        onChanged: (newValue) {
+                          if (newValue != null) {
+                            onChanged!(newValue);
+                          }
+                        },
+                        activeColor: const Color(0xFF00754B),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          option,
+                          style: GoogleFonts.poppins(
+                            fontSize: 13,
+                            color: value == option
+                                ? const Color(0xFF00754B)
+                                : Colors.black87,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ],
+              ),
             );
           }).toList(),
         ),
